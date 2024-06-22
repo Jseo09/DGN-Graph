@@ -1,6 +1,7 @@
 import os
 import json
 from sklearn.model_selection import KFold
+import random
 
 def preprocess_graph(graph_lst):
     num_nodes = 0
@@ -15,10 +16,15 @@ def preprocess_graph(graph_lst):
     
     #This picks the largest graph 
     return max_graph
+# This picks the graph 'regardless' of the size. 
+def picking_random_graph(graph_lst):
+    random_graph = random.choice(graph_lst["graphs"])
+    return random_graph 
+
 
 if __name__ == "__main__":
     # Change the file path according to pygraphs file you are trying to make folds of 
-    json_file = "pygraphs3.json"
+    json_file = "/home/jseo/DGN-Graph-1/Baseline_Models/GraphSAGE/graph_creation/processed_data/pygraphs.json"
     graph_lst = json.load(open(json_file))
 
     # Set the values over here(parameter here)/ It shuffles(for it to pick random graphs )
@@ -38,8 +44,8 @@ if __name__ == "__main__":
         print(f"Number of validation graphs: {len(val_graphs)}")
 
         # Preprocess each fold for training for findining the largest graph. 
-        train_max_graph = preprocess_graph({"graphs": train_graphs})
-        val_max_graph = preprocess_graph({"graphs": val_graphs})
+        train_max_graph = picking_random_graph({"graphs": train_graphs})
+        val_max_graph = picking_random_graph({"graphs": val_graphs})
 
         # Save the preprocessed graphs into JSON files
         train_output_dir = f"fold{fold_index}"
